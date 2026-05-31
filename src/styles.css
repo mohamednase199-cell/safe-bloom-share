@@ -150,5 +150,24 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
+
+@keyframes bloom-grow {
+  0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes bloom-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes bloom-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-bloom-grow { animation: bloom-grow 1.2s cubic-bezier(.34,1.56,.64,1) both; }
+.animate-bloom-float { animation: bloom-float 4s ease-in-out infinite; }
+.animate-bloom-fade { animation: bloom-fade-up .6s ease-out both; }
