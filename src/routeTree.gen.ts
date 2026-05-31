@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as BridgeRouteImport } from './routes/bridge'
 import { Route as IndexRouteImport } from './routes/index'
 
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -47,6 +48,11 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BridgeRoute = BridgeRouteImport.update({
+  id: '/bridge',
+  path: '/bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +61,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bridge': typeof BridgeRoute
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bridge': typeof BridgeRoute
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bridge': typeof BridgeRoute
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bridge'
     | '/chat'
     | '/home'
     | '/journal'
@@ -92,10 +102,19 @@ export interface FileRouteTypes {
     | '/mood'
     | '/onboarding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/home' | '/journal' | '/login' | '/mood' | '/onboarding'
+  to:
+    | '/'
+    | '/bridge'
+    | '/chat'
+    | '/home'
+    | '/journal'
+    | '/login'
+    | '/mood'
+    | '/onboarding'
   id:
     | '__root__'
     | '/'
+    | '/bridge'
     | '/chat'
     | '/home'
     | '/journal'
@@ -106,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BridgeRoute: typeof BridgeRoute
   ChatRoute: typeof ChatRoute
   HomeRoute: typeof HomeRoute
   JournalRoute: typeof JournalRoute
@@ -158,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bridge': {
+      id: '/bridge'
+      path: '/bridge'
+      fullPath: '/bridge'
+      preLoaderRoute: typeof BridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -170,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BridgeRoute: BridgeRoute,
   ChatRoute: ChatRoute,
   HomeRoute: HomeRoute,
   JournalRoute: JournalRoute,
