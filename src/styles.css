@@ -62,26 +62,36 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --radius: 1.25rem;
+  /* Bloom palette */
+  --background: oklch(0.985 0.012 85);          /* off-white #FAF9F6 */
+  --foreground: oklch(0.32 0.025 150);          /* deep sage ink */
+  --card: oklch(0.97 0.018 80);                 /* soft beige #F5F0E8 */
+  --card-foreground: oklch(0.32 0.025 150);
+  --popover: oklch(0.985 0.012 85);
+  --popover-foreground: oklch(0.32 0.025 150);
+  --primary: oklch(0.74 0.04 145);              /* sage green #A8B5A2 */
+  --primary-foreground: oklch(0.99 0.005 90);
+  --secondary: oklch(0.85 0.06 305);            /* lavender #D7C7E8 */
+  --secondary-foreground: oklch(0.32 0.04 295);
+  --muted: oklch(0.95 0.014 90);
+  --muted-foreground: oklch(0.5 0.02 150);
+  --accent: oklch(0.88 0.05 305);
+  --accent-foreground: oklch(0.32 0.04 295);
+  --destructive: oklch(0.65 0.18 25);
+  --destructive-foreground: oklch(0.99 0.005 90);
+  --border: oklch(0.9 0.02 100);
+  --input: oklch(0.93 0.018 100);
+  --ring: oklch(0.74 0.04 145);
+
+  --bloom-sage: oklch(0.74 0.04 145);
+  --bloom-lavender: oklch(0.85 0.06 305);
+  --bloom-beige: oklch(0.97 0.018 80);
+  --bloom-cream: oklch(0.985 0.012 85);
+  --gradient-bloom: linear-gradient(160deg, oklch(0.97 0.018 80) 0%, oklch(0.88 0.05 305 / 0.45) 100%);
+  --gradient-sage: linear-gradient(135deg, oklch(0.78 0.045 145), oklch(0.85 0.06 305));
+  --shadow-soft: 0 10px 30px -12px oklch(0.5 0.04 150 / 0.18);
+  --shadow-glow: 0 8px 24px -8px oklch(0.74 0.04 145 / 0.35);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +150,24 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
+
+@keyframes bloom-grow {
+  0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes bloom-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes bloom-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-bloom-grow { animation: bloom-grow 1.2s cubic-bezier(.34,1.56,.64,1) both; }
+.animate-bloom-float { animation: bloom-float 4s ease-in-out infinite; }
+.animate-bloom-fade { animation: bloom-fade-up .6s ease-out both; }
