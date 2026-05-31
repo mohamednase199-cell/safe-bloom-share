@@ -17,6 +17,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as BridgeRouteImport } from './routes/bridge'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BridgeDashboardRouteImport } from './routes/bridge.dashboard'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -58,37 +59,45 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BridgeDashboardRoute = BridgeDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => BridgeRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/bridge': typeof BridgeRoute
+  '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/bridge/dashboard': typeof BridgeDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/bridge': typeof BridgeRoute
+  '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/bridge/dashboard': typeof BridgeDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/bridge': typeof BridgeRoute
+  '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/bridge/dashboard': typeof BridgeDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mood'
     | '/onboarding'
+    | '/bridge/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mood'
     | '/onboarding'
+    | '/bridge/dashboard'
   id:
     | '__root__'
     | '/'
@@ -121,11 +132,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/mood'
     | '/onboarding'
+    | '/bridge/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BridgeRoute: typeof BridgeRoute
+  BridgeRoute: typeof BridgeRouteWithChildren
   ChatRoute: typeof ChatRoute
   HomeRoute: typeof HomeRoute
   JournalRoute: typeof JournalRoute
@@ -192,12 +204,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bridge/dashboard': {
+      id: '/bridge/dashboard'
+      path: '/dashboard'
+      fullPath: '/bridge/dashboard'
+      preLoaderRoute: typeof BridgeDashboardRouteImport
+      parentRoute: typeof BridgeRoute
+    }
   }
 }
 
+interface BridgeRouteChildren {
+  BridgeDashboardRoute: typeof BridgeDashboardRoute
+}
+
+const BridgeRouteChildren: BridgeRouteChildren = {
+  BridgeDashboardRoute: BridgeDashboardRoute,
+}
+
+const BridgeRouteWithChildren =
+  BridgeRoute._addFileChildren(BridgeRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BridgeRoute: BridgeRoute,
+  BridgeRoute: BridgeRouteWithChildren,
   ChatRoute: ChatRoute,
   HomeRoute: HomeRoute,
   JournalRoute: JournalRoute,
