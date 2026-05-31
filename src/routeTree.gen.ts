@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MoodRouteImport } from './routes/mood'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as HomeRouteImport } from './routes/home'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoodRoute = MoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,21 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/home' | '/journal' | '/login' | '/onboarding'
+  fullPaths:
+    | '/'
+    | '/chat'
+    | '/home'
+    | '/journal'
+    | '/login'
+    | '/mood'
+    | '/onboarding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/home' | '/journal' | '/login' | '/onboarding'
+  to: '/' | '/chat' | '/home' | '/journal' | '/login' | '/mood' | '/onboarding'
   id:
     | '__root__'
     | '/'
@@ -84,6 +100,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/journal'
     | '/login'
+    | '/mood'
     | '/onboarding'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +110,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   JournalRoute: typeof JournalRoute
   LoginRoute: typeof LoginRoute
+  MoodRoute: typeof MoodRoute
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -103,6 +121,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mood': {
+      id: '/mood'
+      path: '/mood'
+      fullPath: '/mood'
+      preLoaderRoute: typeof MoodRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -149,6 +174,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   JournalRoute: JournalRoute,
   LoginRoute: LoginRoute,
+  MoodRoute: MoodRoute,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
