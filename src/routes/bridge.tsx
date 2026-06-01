@@ -2,18 +2,18 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { ChevronLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Eye, EyeOff, Copy, Check } from "lucide-react";
 
 export const Route = createFileRoute("/bridge")({
   head: () => ({ meta: [{ title: "Bloom Bridge" }, { name: "description", content: "A consent-based way to share your emotional wellbeing with family." }] }),
   component: Bridge,
 });
 
-type Privacy = "private" | "partial" | "summary";
+type Privacy = "private" | "summary" | "weekly";
 const levels: { val: Privacy; label: string; desc: string }[] = [
-  { val: "private", label: "Private", desc: "Nothing is shared. Just you." },
-  { val: "partial", label: "Partial sharing", desc: "Mood trends only, no details." },
-  { val: "summary", label: "Emotional summary only", desc: "A weekly AI-written summary." },
+  { val: "private", label: "Fully Private", desc: "Nothing is shared. Just you." },
+  { val: "summary", label: "Emotional Summary Only", desc: "A short AI-written feeling summary." },
+  { val: "weekly", label: "Weekly Report Sharing", desc: "A gentle weekly mood + stress report." },
 ];
 
 function Bridge() {
@@ -21,10 +21,19 @@ function Bridge() {
   const [parent, setParent] = useState({ name: "", relation: "Mother", contact: "" });
   const [privacy, setPrivacy] = useState<Privacy>("summary");
   const [linked, setLinked] = useState(false);
+  const [invite, setInvite] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const b = JSON.parse(localStorage.getItem("bloom.bridge") || "null");
-    if (b) { setParent(b.parent); setPrivacy(b.privacy); setLinked(true); }
+    if (b) {
+      setParent(b.parent);
+      // migrate older "partial" value
+      setPrivacy((b.privacy === "partial" ? "weekly" : b.privacy) as Privacy);
+      setLinked(true);
+    }
+    const inv = localStorage.getItem("bloom.bridge.invite");
+    if (inv) setInvite(inv);
   }, []);
 
   const addParent = (e: React.FormEvent) => {
@@ -36,15 +45,27 @@ function Bridge() {
 
   const unlink = () => { localStorage.removeItem("bloom.bridge"); setLinked(false); setParent({ name: "", relation: "Mother", contact: "" }); };
 
+  const generateInvite = () => {
+    const link = `https://bloom.app/invite/${crypto.randomUUID().slice(0, 8)}`;
+    setInvite(link);
+    localStorage.setItem("bloom.bridge.invite", link);
+    setCopied(false);
+  };
+  const copyInvite = async () => {
+    if (!invite) return;
+    try { await navigator.clipboard.writeText(invite); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* noop */ }
+  };
+
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col">
         <header className="px-6 pt-12 pb-5" style={{ background: "var(--gradient-bloom)" }}>
           <div className="flex items-center gap-3">
             <Link to="/home" className="rounded-full p-1.5 hover:bg-white/60"><ChevronLeft size={20} /></Link>
-            <h1 className="text-2xl font-semibold tracking-tight">Bloom Bridge 💙</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Bloom Bridge 🤝</h1>
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">Share your emotional wellbeing safely with your family — only what you choose.</p>
+          <p className="mt-3 text-base font-medium">Connect with Your Family 💙</p>
+          <p className="mt-1 text-sm text-muted-foreground">You are in control of what you share. Bloom respects your privacy.</p>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 text-xs text-foreground">
             <ShieldCheck size={14} className="text-[var(--bloom-sage)]" />
             Not monitoring · No chat access · You're in control
@@ -72,13 +93,25 @@ function Bridge() {
                   <p className="mt-1 text-xs font-normal text-muted-foreground">Set this up later anytime.</p>
                 </button>
                 <button
-                  onClick={() => { navigator.clipboard?.writeText(`https://bloom.app/invite/${crypto.randomUUID().slice(0,8)}`); alert("Invite link copied 💙"); }}
+                  onClick={generateInvite}
                   className="rounded-3xl bg-card p-4 text-sm font-medium shadow-[var(--shadow-soft)]"
                 >
-                  Invite later
+                  Send Invitation Link
                   <p className="mt-1 text-xs font-normal text-muted-foreground">Generate a private link.</p>
                 </button>
               </div>
+
+              {invite && (
+                <section className="rounded-3xl bg-white p-4 shadow-[var(--shadow-soft)] animate-bloom-fade">
+                  <p className="text-xs font-medium text-muted-foreground">Your private invite link</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <code className="flex-1 truncate rounded-xl bg-[color:var(--bloom-beige)]/50 px-3 py-2 text-xs">{invite}</code>
+                    <button onClick={copyInvite} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-primary-foreground" style={{ background: "var(--gradient-sage)" }}>
+                      {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                </section>
+              )}
             </>
           ) : (
             <section className="rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)] animate-bloom-fade">
