@@ -10,11 +10,11 @@ export const Route = createFileRoute("/home")({
 });
 
 const moods = [
-  { e: "😄", label: "Great", val: "great" },
-  { e: "😊", label: "Good", val: "good" },
-  { e: "😐", label: "Okay", val: "okay" },
-  { e: "😔", label: "Low", val: "low" },
-  { e: "😣", label: "Tough", val: "tough" },
+  { e: "😄", label: "Happy", val: "great" },
+  { e: "😊", label: "Calm", val: "good" },
+  { e: "😐", label: "Neutral", val: "okay" },
+  { e: "😔", label: "Sad", val: "low" },
+  { e: "😣", label: "Stressed", val: "tough" },
 ];
 
 function HomePage() {
