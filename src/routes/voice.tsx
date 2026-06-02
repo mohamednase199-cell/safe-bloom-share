@@ -68,6 +68,7 @@ function VoicePage() {
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef<number | null>(null);
   const samplesRef = useRef<number[]>([]);
+  const transcriptRef = useRef<string>("");
 
   const askServer = useServerFn(voiceReply);
 
@@ -154,6 +155,7 @@ function VoicePage() {
         .map((r) => r[0].transcript)
         .join(" ");
       setPartial(t);
+      transcriptRef.current = t;
     };
     rec.onerror = () => {
       setListening(false);
@@ -163,8 +165,8 @@ function VoicePage() {
       const detected = detectEnergy();
       setEnergy(detected);
       cleanupAudio();
-      const finalText = (recRef.current as unknown as { _last?: string })?._last || "";
-      void handleFinal(finalText || partial, detected);
+      void handleFinal(transcriptRef.current, detected);
+      transcriptRef.current = "";
     };
     recRef.current = rec;
     setListening(true);
