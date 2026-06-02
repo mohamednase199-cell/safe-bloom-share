@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { ChevronLeft, Mic, MicOff, ShieldCheck, Volume2 } from "lucide-react";
+import { ChevronLeft, ExternalLink, Mic, MicOff, Send, ShieldCheck, Volume2 } from "lucide-react";
 import { voiceReply } from "@/lib/voice.functions";
 
 export const Route = createFileRoute("/voice")({
@@ -61,6 +61,9 @@ function VoicePage() {
   const [supported, setSupported] = useState(true);
   const [energy, setEnergy] = useState<Energy>("neutral");
   const [level, setLevel] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [typed, setTyped] = useState("");
+  const [inIframe, setInIframe] = useState(false);
 
   const recRef = useRef<SR | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -75,6 +78,13 @@ function VoicePage() {
   useEffect(() => {
     const SR = getSR();
     if (!SR) setSupported(false);
+    try {
+      if (typeof window !== "undefined" && window.self !== window.top) {
+        setInIframe(true);
+      }
+    } catch {
+      setInIframe(true);
+    }
     return () => {
       cleanupAudio();
       try {
@@ -138,13 +148,21 @@ function VoicePage() {
 
   async function start() {
     const SR = getSR();
-    if (!SR) return;
+    if (!SR) {
+      setErrorMsg("المتصفح ده مش بيدعم التعرف على الصوت. جرب Chrome 💙");
+      return;
+    }
+    setErrorMsg(null);
     const locale = DIALECTS.find((d) => d.id === dialect)?.locale ?? "ar-EG";
     setPartial("");
     try {
       await startAudioMeter();
-    } catch {
-      // mic denied — continue without meter
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrorMsg(
+        `مش قادر أفتح المايك 🎙️ (${msg}). افتح الصفحة في تاب جديد أو اكتب اللي في قلبك تحت.`,
+      );
+      return;
     }
     const rec = new SR();
     rec.lang = locale;
@@ -157,8 +175,12 @@ function VoicePage() {
       setPartial(t);
       transcriptRef.current = t;
     };
-    rec.onerror = () => {
+    rec.onerror = (e) => {
       setListening(false);
+      setErrorMsg(
+        `حصل خطأ في المايك (${e.error}). جرب تاني أو اكتب رسالتك.`,
+      );
+      cleanupAudio();
     };
     rec.onend = () => {
       setListening(false);
@@ -170,7 +192,13 @@ function VoicePage() {
     };
     recRef.current = rec;
     setListening(true);
-    rec.start();
+    try {
+      rec.start();
+    } catch (err) {
+      setListening(false);
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrorMsg(`مش قادر أبدأ التسجيل (${msg}).`);
+    }
   }
 
   function stop() {
@@ -203,13 +231,15 @@ function VoicePage() {
       const aiTurn: Turn = { id: crypto.randomUUID(), role: "ai", text: reply };
       setTurns((t) => [...t, aiTurn]);
       speak(reply);
-    } catch {
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("voiceReply failed:", err);
       setTurns((t) => [
         ...t,
         {
           id: crypto.randomUUID(),
           role: "ai",
-          text: "حصل خلل بسيط 🌿 جرب تاني بعد شوية.",
+          text: `حصل خلل بسيط 🌿 (${msg}). جرب تاني بعد شوية.`,
         },
       ]);
     } finally {
@@ -260,6 +290,22 @@ function VoicePage() {
             <ShieldCheck size={12} /> No audio stored
           </span>
         </header>
+
+        {inIframe && (
+          <div className="mx-5 mt-3 flex items-center justify-between gap-2 rounded-2xl bg-white px-3 py-2 text-[11px] shadow-[var(--shadow-soft)]">
+            <span>المايك ممكن ميشتغلش هنا. افتح في تاب جديد للأفضل.</span>
+            <a
+              href={typeof window !== "undefined" ? window.location.href : "#"}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1 rounded-full px-2 py-1 text-white"
+              style={{ background: "var(--gradient-sage)" }}
+              dir="ltr"
+            >
+              <ExternalLink size={11} /> Open
+            </a>
+          </div>
+        )}
 
         <div className="px-5 pt-4">
           <div className="flex gap-2">
@@ -342,6 +388,42 @@ function VoicePage() {
         </main>
 
         <div className="flex flex-col items-center gap-2 px-5 pb-4">
+          {errorMsg && (
+            <p className="w-full rounded-2xl bg-white px-3 py-2 text-center text-[11px] text-muted-foreground shadow-[var(--shadow-soft)]">
+              {errorMsg}
+            </p>
+          )}
+
+          <div className="flex w-full items-center gap-2 rounded-full bg-white p-1.5 shadow-[var(--shadow-soft)]">
+            <input
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && typed.trim() && !thinking) {
+                  const t = typed.trim();
+                  setTyped("");
+                  void handleFinal(t, "neutral");
+                }
+              }}
+              placeholder="اكتب لو المايك مش شغال…"
+              className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
+              dir="rtl"
+            />
+            <button
+              onClick={() => {
+                if (!typed.trim() || thinking) return;
+                const t = typed.trim();
+                setTyped("");
+                void handleFinal(t, "neutral");
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white"
+              style={{ background: "var(--gradient-sage)" }}
+              aria-label="Send"
+            >
+              <Send size={14} />
+            </button>
+          </div>
+
           {!supported ? (
             <p className="text-center text-xs text-muted-foreground">
               المتصفح ده مش بيدعم التعرف على الصوت. جرب Chrome 💙
