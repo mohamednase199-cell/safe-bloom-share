@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { ChevronLeft, Send } from "lucide-react";
+import { ChevronLeft, Mic, Send } from "lucide-react";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({ meta: [{ title: "Bloom Chat" }, { name: "description", content: "A kind AI companion to talk through how you feel." }] }),
@@ -59,6 +59,12 @@ function Chat() {
               <p className="text-xs text-muted-foreground">Always kind · Never judges</p>
             </div>
           </div>
+          <Link
+            to="/voice"
+            className="ml-auto flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-1.5 text-xs font-medium hover:bg-white"
+          >
+            <Mic size={14} /> Voice · صوت
+          </Link>
         </header>
 
         <main className="flex-1 space-y-3 overflow-y-auto px-5 py-5">
