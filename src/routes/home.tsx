@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { BookOpen, MessageCircle, BarChart3, Heart } from "lucide-react";
+import { BookOpen, MessageCircle, BarChart3, Heart, Brain } from "lucide-react";
 
 export const Route = createFileRoute("/home")({
   head: () => ({ meta: [{ title: "Home — Bloom" }, { name: "description", content: "Your gentle daily check-in with Bloom." }] }),
@@ -84,6 +84,7 @@ function HomePage() {
             <QuickAction to="/chat" icon={<MessageCircle size={20} />} label="AI Chat" hint="Talk it through" />
             <QuickAction to="/mood" icon={<BarChart3 size={20} />} label="Mood Tracker" hint="See your week" />
             <QuickAction to="/bridge" icon={<Heart size={20} />} label="Bloom Bridge" hint="Family, safely" />
+            <QuickAction to="/neuroboost" icon={<Brain size={20} />} label="NeuroBoost" hint="Focus, calmly" />
           </section>
         </main>
 
