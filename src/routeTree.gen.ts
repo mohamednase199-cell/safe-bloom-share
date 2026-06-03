@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NeuroboostRouteImport } from './routes/neuroboost'
 import { Route as MoodRouteImport } from './routes/mood'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JournalRouteImport } from './routes/journal'
@@ -28,6 +29,11 @@ const VoiceRoute = VoiceRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeuroboostRoute = NeuroboostRouteImport.update({
+  id: '/neuroboost',
+  path: '/neuroboost',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MoodRoute = MoodRouteImport.update({
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
+  '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
+  '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
+  '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/login'
     | '/mood'
+    | '/neuroboost'
     | '/onboarding'
     | '/voice'
     | '/bridge/dashboard'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/login'
     | '/mood'
+    | '/neuroboost'
     | '/onboarding'
     | '/voice'
     | '/bridge/dashboard'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/login'
     | '/mood'
+    | '/neuroboost'
     | '/onboarding'
     | '/voice'
     | '/bridge/dashboard'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   JournalRoute: typeof JournalRoute
   LoginRoute: typeof LoginRoute
   MoodRoute: typeof MoodRoute
+  NeuroboostRoute: typeof NeuroboostRoute
   OnboardingRoute: typeof OnboardingRoute
   VoiceRoute: typeof VoiceRoute
 }
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/neuroboost': {
+      id: '/neuroboost'
+      path: '/neuroboost'
+      fullPath: '/neuroboost'
+      preLoaderRoute: typeof NeuroboostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mood': {
@@ -253,6 +273,7 @@ const rootRouteChildren: RootRouteChildren = {
   JournalRoute: JournalRoute,
   LoginRoute: LoginRoute,
   MoodRoute: MoodRoute,
+  NeuroboostRoute: NeuroboostRoute,
   OnboardingRoute: OnboardingRoute,
   VoiceRoute: VoiceRoute,
 }
