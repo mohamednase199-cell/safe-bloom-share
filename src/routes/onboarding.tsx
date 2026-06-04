@@ -38,11 +38,7 @@ function Onboarding() {
 
         <div className="mt-8 flex items-center justify-between gap-3">
           <button onClick={() => navigate({ to: "/home" })} className="text-sm text-muted-foreground">Skip</button>
-          <button
-            onClick={() => (last ? navigate({ to: "/home" }) : setI(i + 1))}
-            className="rounded-2xl px-8 py-3.5 text-sm font-semibold text-primary-foreground"
-            style={{ background: "var(--gradient-sage)", boxShadow: "var(--shadow-glow)" }}
-          >
+          <button onClick={() => (last ? navigate({ to: "/home" }) : setI(i + 1))} className="btn-base btn-primary px-8">
             {last ? "Start 🌸" : "Next"}
           </button>
         </div>
