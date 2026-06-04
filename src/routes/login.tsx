@@ -476,8 +476,7 @@ function GoogleOnboarding({ onBack, onDone }: { onBack: () => void; onDone: () =
         <button
           onClick={next}
           disabled={!canNext}
-          className="mt-6 rounded-2xl px-5 py-4 text-sm font-semibold text-primary-foreground transition disabled:opacity-40"
-          style={{ background: "var(--gradient-sage)", boxShadow: canNext ? "var(--shadow-glow)" : undefined }}
+          className="btn-base btn-primary mt-6"
         >
           {step < 2 ? "Continue" : "Enter Bloom 🌸"}
         </button>
