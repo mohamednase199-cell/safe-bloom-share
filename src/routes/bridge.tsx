@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { ChevronLeft, ShieldCheck, Eye, EyeOff, Copy, Check } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Eye, EyeOff, Copy, Check, BookOpen, School as SchoolIcon, Globe } from "lucide-react";
+import { getLang, setLang, type Lang } from "@/lib/bloom-helpers";
 
 export const Route = createFileRoute("/bridge")({
   head: () => ({ meta: [{ title: "Bloom Bridge" }, { name: "description", content: "A consent-based way to share your emotional wellbeing with family." }] }),
@@ -23,6 +24,8 @@ function Bridge() {
   const [linked, setLinked] = useState(false);
   const [invite, setInvite] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [lang, setLangState] = useState<Lang>("ar");
+  const [openArticle, setOpenArticle] = useState<number | null>(null);
 
   useEffect(() => {
     const b = JSON.parse(localStorage.getItem("bloom.bridge") || "null");
@@ -34,6 +37,7 @@ function Bridge() {
     }
     const inv = localStorage.getItem("bloom.bridge.invite");
     if (inv) setInvite(inv);
+    setLangState(getLang());
   }, []);
 
   const addParent = (e: React.FormEvent) => {
@@ -141,6 +145,53 @@ function Bridge() {
               <li>✔ AI-generated support guidance</li>
             </ul>
           </section>
+
+          <section className="rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)]">
+            <h2 className="flex items-center gap-2 text-sm font-semibold"><BookOpen size={16} /> Parent Learning Center 👨‍👩‍👧</h2>
+            <p className="mt-1 text-xs text-muted-foreground">Short guides for supporting your teen.</p>
+            <ul className="mt-3 space-y-2">
+              {PARENT_ARTICLES.map((a, i) => (
+                <li key={i}>
+                  <button onClick={() => setOpenArticle(openArticle === i ? null : i)}
+                    className="flex w-full items-start gap-3 rounded-2xl p-3 text-left transition"
+                    style={{ background: openArticle === i ? "color-mix(in oklab, var(--bloom-lavender) 50%, white)" : "color-mix(in oklab, var(--bloom-beige) 55%, white)" }}>
+                    <span className="text-xl">{a.emoji}</span>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{a.title}</p>
+                      {openArticle === i && <p className="mt-2 text-xs leading-relaxed text-foreground/80">{a.body}</p>}
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <Link to="/schools" className="flex items-center gap-3 rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl text-white" style={{ background: "var(--gradient-sage)" }}>
+              <SchoolIcon size={18} />
+            </span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Bloom for Schools</p>
+              <p className="text-xs text-muted-foreground">Wellness programs for classrooms — coming soon</p>
+            </div>
+          </Link>
+
+          <section className="rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)]">
+            <h2 className="flex items-center gap-2 text-sm font-semibold"><Globe size={16} /> Cultural Intelligence 🌐</h2>
+            <p className="mt-1 text-xs text-muted-foreground">Bloom adapts to your language and culture.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {(["ar","en"] as Lang[]).map((l) => (
+                <button key={l} onClick={() => { setLang(l); setLangState(l); }}
+                  className="rounded-2xl p-3 text-sm font-medium transition"
+                  style={{
+                    background: lang === l ? "var(--bloom-sage)" : "color-mix(in oklab, var(--bloom-beige) 60%, white)",
+                    color: lang === l ? "var(--primary-foreground)" : "var(--foreground)",
+                  }}>
+                  {l === "ar" ? "العربية 🇪🇬" : "English 🇬🇧"}
+                </button>
+              ))}
+            </div>
+          </section>
         </main>
 
         <BottomNav />
@@ -185,3 +236,26 @@ const inputCls = "w-full rounded-xl border border-border bg-white px-4 py-3 text
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (<label className="flex flex-col gap-1.5"><span className="text-xs font-medium text-muted-foreground">{label}</span>{children}</label>);
 }
+
+const PARENT_ARTICLES = [
+  {
+    emoji: "🗣️",
+    title: "إزاي تكلم ابنك المراهق",
+    body: "ابدأ بالاستماع من غير مقاطعة، وخلي السؤال مفتوح: 'إيه أكتر حاجة شغلتك النهارده؟'. تجنب الحكم أو النصيحة في أول 5 دقايق — هما محتاجين يحسوا إنهم مسموعين قبل أي حاجة. وقت قصير منتظم (10 دقايق يوميًا) أحسن من جلسة طويلة كل أسبوع.",
+  },
+  {
+    emoji: "💙",
+    title: "ازاي تدعم مراهق متوتر",
+    body: "اعترف بالشعور قبل ما تحل: 'حاسس إن ده مرهق ليك'. ساعده يقسّم المشكلة لخطوات صغيرة. شجّع نوم منتظم (7–9 ساعات) ووقت بدون شاشات قبل النوم. لو التوتر مستمر لأسابيع، فكّر في استشاري متخصص — ده مش ضعف.",
+  },
+  {
+    emoji: "🧠",
+    title: "التعامل مع ADHD",
+    body: "ركّز على نقط القوة مش العيوب. استخدم تذكيرات بصرية ومهام صغيرة (5–10 دقايق). جدول ثابت بيقلل القلق. اتفقوا على إشارات هادية بدل التوبيخ. التحفيز الإيجابي بيشتغل أحسن بكتير من العقاب.",
+  },
+  {
+    emoji: "🌙",
+    title: "خصوصية المراهق ومتى تتدخل",
+    body: "الخصوصية مهمة للنمو، بس فيه علامات لازم تتدخل فيها: انعزال طويل، تغيرات حادة في الأكل/النوم، أو كلام عن إيذاء النفس. ساعتها تكلم بحب وادعم وصوله لمتخصص.",
+  },
+];

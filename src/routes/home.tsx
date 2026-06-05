@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { BookOpen, MessageCircle, BarChart3, Heart, Brain } from "lucide-react";
+import { BookOpen, MessageCircle, BarChart3, Heart, Brain, Sparkles, Moon, GraduationCap } from "lucide-react";
+import { computeXP, currentStage, nextStage } from "@/lib/bloom-helpers";
 
 export const Route = createFileRoute("/home")({
   head: () => ({ meta: [{ title: "Home — Bloom" }, { name: "description", content: "Your gentle daily check-in with Bloom." }] }),
@@ -20,12 +21,14 @@ const moods = [
 function HomePage() {
   const [name, setName] = useState("Friend");
   const [mood, setMood] = useState<string | null>(null);
+  const [xp, setXP] = useState(0);
 
   useEffect(() => {
     try {
       const u = JSON.parse(localStorage.getItem("bloom.user") || "{}");
       if (u.name) setName(u.name.split(" ")[0]);
       setMood(localStorage.getItem("bloom.todayMood"));
+      setXP(computeXP());
     } catch { /* noop */ }
   }, []);
 
@@ -79,12 +82,31 @@ function HomePage() {
             <p className="mt-2 text-sm opacity-80">Inhale for 4 · Hold for 4 · Exhale for 6.</p>
           </section>
 
+          <Link to="/journey" className="block rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)] animate-bloom-fade">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">Your journey</p>
+                <p className="mt-1 text-base font-semibold">{currentStage(xp).emoji} {currentStage(xp).label}</p>
+              </div>
+              <Sparkles size={18} className="opacity-60" />
+            </div>
+            <div className="mt-3 h-2 w-full overflow-hidden rounded-full" style={{ background: "color-mix(in oklab, var(--bloom-beige) 70%, white)" }}>
+              <div className="h-full rounded-full" style={{
+                width: `${nextStage(xp) ? Math.min(100, Math.round(((xp - currentStage(xp).min) / (nextStage(xp)!.min - currentStage(xp).min)) * 100)) : 100}%`,
+                background: "var(--bloom-sage)",
+              }} />
+            </div>
+          </Link>
+
           <section className="grid grid-cols-2 gap-3">
             <QuickAction to="/journal" icon={<BookOpen size={20} />} label="Journal" hint="Write it out" />
             <QuickAction to="/chat" icon={<MessageCircle size={20} />} label="AI Chat" hint="Talk it through" />
             <QuickAction to="/mood" icon={<BarChart3 size={20} />} label="Mood Tracker" hint="See your week" />
             <QuickAction to="/bridge" icon={<Heart size={20} />} label="Bloom Bridge" hint="Family, safely" />
             <QuickAction to="/neuroboost" icon={<Brain size={20} />} label="NeuroBoost" hint="Focus, calmly" />
+            <QuickAction to="/habits" icon={<Moon size={20} />} label="Habits" hint="Sleep · Study" />
+            <QuickAction to="/exams" icon={<GraduationCap size={20} />} label="Exams" hint="Calm study plan" />
+            <QuickAction to="/schools" icon={<Sparkles size={20} />} label="For Schools" hint="Coming soon" />
           </section>
         </main>
 

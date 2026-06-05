@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { ChevronLeft, Mic, Send } from "lucide-react";
+import { chatReply } from "@/lib/bloom-ai.functions";
+import { addMemory, getMemory, getLang } from "@/lib/bloom-helpers";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({ meta: [{ title: "Bloom Chat" }, { name: "description", content: "A kind AI companion to talk through how you feel." }] }),
@@ -11,40 +14,35 @@ export const Route = createFileRoute("/chat")({
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
 
-const responses: { match: RegExp; reply: string }[] = [
-  { match: /stress|stressed|overwhelm/i, reply: "You're not alone 💙 Let's take a slow breath together — in for 4, out for 6." },
-  { match: /sad|down|low|cry/i, reply: "I'm here with you 🌿 It's okay to feel this. Want to write a little about it in your journal?" },
-  { match: /anx|panic|nervous|scared/i, reply: "Anxiety can feel huge. Try naming 5 things you can see around you — I'll wait 💜" },
-  { match: /tired|exhaust|sleep/i, reply: "Rest is brave too. Maybe a gentle pause, some water, and softer lights tonight 🌙" },
-  { match: /school|exam|study|grade/i, reply: "School pressure is real. Your worth isn't a grade. One small step at a time 🌱" },
-  { match: /family|parent|mom|dad/i, reply: "Family feelings can be complicated. Would you like to try Bloom Bridge to share a gentle summary?" },
-  { match: /happy|good|great|amazing/i, reply: "That's beautiful to hear 🌸 What made today feel a little brighter?" },
-  { match: /hi|hello|hey/i, reply: "Hi 🌸 I'm so glad you're here. How are you feeling right now?" },
-];
-
-function reply(text: string): string {
-  const hit = responses.find(r => r.match.test(text));
-  return hit?.reply ?? "Thank you for sharing that with me 💙 Tell me a little more — I'm listening.";
-}
-
 function Chat() {
+  const ask = useServerFn(chatReply);
   const [messages, setMessages] = useState<Msg[]>([
     { id: "intro", role: "ai", text: "Hi 🌸 I'm Bloom. This is a safe space. How are you feeling today?" },
   ]);
   const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  const send = () => {
+  const send = async () => {
     const t = input.trim();
-    if (!t) return;
+    if (!t || busy) return;
     const user: Msg = { id: crypto.randomUUID(), role: "user", text: t };
     setMessages(m => [...m, user]);
     setInput("");
-    setTimeout(() => {
-      setMessages(m => [...m, { id: crypto.randomUUID(), role: "ai", text: reply(t) }]);
-    }, 600);
+    setBusy(true);
+    try {
+      const history = messages.slice(-8).map(m => ({ role: m.role, text: m.text }));
+      const res = await ask({ data: { message: t, memory: getMemory(), lang: getLang(), history } });
+      if (res.memoryNote) addMemory(res.memoryNote);
+      setMessages(m => [...m, { id: crypto.randomUUID(), role: "ai", text: res.reply }]);
+    } catch (e) {
+      setMessages(m => [...m, { id: crypto.randomUUID(), role: "ai", text: "آسف، حصلت مشكلة. جرّب تاني بعد شوية 💙" }]);
+      console.error(e);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -91,11 +89,12 @@ function Chat() {
             <input
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && send()}
-              placeholder="Share what you're feeling…"
+              onKeyDown={e => { if (e.key === "Enter") void send(); }}
+              placeholder={busy ? "Bloom is thinking…" : "Share what you're feeling…"}
+              disabled={busy}
               className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
             />
-            <button onClick={send} className="flex h-10 w-10 items-center justify-center rounded-full text-white" style={{ background: "var(--gradient-sage)" }}>
+            <button onClick={() => void send()} disabled={busy} className="flex h-10 w-10 items-center justify-center rounded-full text-white disabled:opacity-60" style={{ background: "var(--gradient-sage)" }}>
               <Send size={16} />
             </button>
           </div>

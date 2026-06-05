@@ -10,12 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NeuroboostRouteImport } from './routes/neuroboost'
 import { Route as MoodRouteImport } from './routes/mood'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as HabitsRouteImport } from './routes/habits'
+import { Route as ExamsRouteImport } from './routes/exams'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as BridgeRouteImport } from './routes/bridge'
 import { Route as IndexRouteImport } from './routes/index'
@@ -24,6 +28,11 @@ import { Route as BridgeDashboardRouteImport } from './routes/bridge.dashboard'
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchoolsRoute = SchoolsRouteImport.update({
+  id: '/schools',
+  path: '/schools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -46,6 +55,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JournalRoute = JournalRouteImport.update({
   id: '/journal',
   path: '/journal',
@@ -54,6 +68,16 @@ const JournalRoute = JournalRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HabitsRoute = HabitsRouteImport.update({
+  id: '/habits',
+  path: '/habits',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamsRoute = ExamsRouteImport.update({
+  id: '/exams',
+  path: '/exams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -81,12 +105,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
+  '/exams': typeof ExamsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
+  '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
+  '/schools': typeof SchoolsRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
 }
@@ -94,12 +122,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
+  '/exams': typeof ExamsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
+  '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
+  '/schools': typeof SchoolsRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
 }
@@ -108,12 +140,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
+  '/exams': typeof ExamsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journal': typeof JournalRoute
+  '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
   '/mood': typeof MoodRoute
   '/neuroboost': typeof NeuroboostRoute
   '/onboarding': typeof OnboardingRoute
+  '/schools': typeof SchoolsRoute
   '/voice': typeof VoiceRoute
   '/bridge/dashboard': typeof BridgeDashboardRoute
 }
@@ -123,12 +159,16 @@ export interface FileRouteTypes {
     | '/'
     | '/bridge'
     | '/chat'
+    | '/exams'
+    | '/habits'
     | '/home'
     | '/journal'
+    | '/journey'
     | '/login'
     | '/mood'
     | '/neuroboost'
     | '/onboarding'
+    | '/schools'
     | '/voice'
     | '/bridge/dashboard'
   fileRoutesByTo: FileRoutesByTo
@@ -136,12 +176,16 @@ export interface FileRouteTypes {
     | '/'
     | '/bridge'
     | '/chat'
+    | '/exams'
+    | '/habits'
     | '/home'
     | '/journal'
+    | '/journey'
     | '/login'
     | '/mood'
     | '/neuroboost'
     | '/onboarding'
+    | '/schools'
     | '/voice'
     | '/bridge/dashboard'
   id:
@@ -149,12 +193,16 @@ export interface FileRouteTypes {
     | '/'
     | '/bridge'
     | '/chat'
+    | '/exams'
+    | '/habits'
     | '/home'
     | '/journal'
+    | '/journey'
     | '/login'
     | '/mood'
     | '/neuroboost'
     | '/onboarding'
+    | '/schools'
     | '/voice'
     | '/bridge/dashboard'
   fileRoutesById: FileRoutesById
@@ -163,12 +211,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BridgeRoute: typeof BridgeRouteWithChildren
   ChatRoute: typeof ChatRoute
+  ExamsRoute: typeof ExamsRoute
+  HabitsRoute: typeof HabitsRoute
   HomeRoute: typeof HomeRoute
   JournalRoute: typeof JournalRoute
+  JourneyRoute: typeof JourneyRoute
   LoginRoute: typeof LoginRoute
   MoodRoute: typeof MoodRoute
   NeuroboostRoute: typeof NeuroboostRoute
   OnboardingRoute: typeof OnboardingRoute
+  SchoolsRoute: typeof SchoolsRoute
   VoiceRoute: typeof VoiceRoute
 }
 
@@ -179,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/voice'
       fullPath: '/voice'
       preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schools': {
+      id: '/schools'
+      path: '/schools'
+      fullPath: '/schools'
+      preLoaderRoute: typeof SchoolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -209,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/journal': {
       id: '/journal'
       path: '/journal'
@@ -221,6 +287,20 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/habits': {
+      id: '/habits'
+      path: '/habits'
+      fullPath: '/habits'
+      preLoaderRoute: typeof HabitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exams': {
+      id: '/exams'
+      path: '/exams'
+      fullPath: '/exams'
+      preLoaderRoute: typeof ExamsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -269,24 +349,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BridgeRoute: BridgeRouteWithChildren,
   ChatRoute: ChatRoute,
+  ExamsRoute: ExamsRoute,
+  HabitsRoute: HabitsRoute,
   HomeRoute: HomeRoute,
   JournalRoute: JournalRoute,
+  JourneyRoute: JourneyRoute,
   LoginRoute: LoginRoute,
   MoodRoute: MoodRoute,
   NeuroboostRoute: NeuroboostRoute,
   OnboardingRoute: OnboardingRoute,
+  SchoolsRoute: SchoolsRoute,
   VoiceRoute: VoiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
