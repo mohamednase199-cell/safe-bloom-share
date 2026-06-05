@@ -17,97 +17,37 @@ import { Route as MoodRouteImport } from './routes/mood'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as JournalRouteImport } from './routes/journal'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as HabitsRouteImport } from './routes/habits'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as ExamsRouteImport } from './routes/exams'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as BridgeRouteImport } from './routes/bridge'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BridgeDashboardRouteImport } from './routes/bridge.dashboard'
 
-const VoiceRoute = VoiceRouteImport.update({
-  id: '/voice',
-  path: '/voice',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SchoolsRoute = SchoolsRouteImport.update({
-  id: '/schools',
-  path: '/schools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NeuroboostRoute = NeuroboostRouteImport.update({
-  id: '/neuroboost',
-  path: '/neuroboost',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MoodRoute = MoodRouteImport.update({
-  id: '/mood',
-  path: '/mood',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JourneyRoute = JourneyRouteImport.update({
-  id: '/journey',
-  path: '/journey',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JournalRoute = JournalRouteImport.update({
-  id: '/journal',
-  path: '/journal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HabitsRoute = HabitsRouteImport.update({
-  id: '/habits',
-  path: '/habits',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExamsRoute = ExamsRouteImport.update({
-  id: '/exams',
-  path: '/exams',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatRoute = ChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BridgeRoute = BridgeRouteImport.update({
-  id: '/bridge',
-  path: '/bridge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BridgeDashboardRoute = BridgeDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => BridgeRoute,
-} as any)
+const VoiceRoute = VoiceRouteImport.update({ id: '/voice', path: '/voice', getParentRoute: () => rootRouteImport } as any)
+const SchoolsRoute = SchoolsRouteImport.update({ id: '/schools', path: '/schools', getParentRoute: () => rootRouteImport } as any)
+const OnboardingRoute = OnboardingRouteImport.update({ id: '/onboarding', path: '/onboarding', getParentRoute: () => rootRouteImport } as any)
+const NeuroboostRoute = NeuroboostRouteImport.update({ id: '/neuroboost', path: '/neuroboost', getParentRoute: () => rootRouteImport } as any)
+const MoodRoute = MoodRouteImport.update({ id: '/mood', path: '/mood', getParentRoute: () => rootRouteImport } as any)
+const LoginRoute = LoginRouteImport.update({ id: '/login', path: '/login', getParentRoute: () => rootRouteImport } as any)
+const JourneyRoute = JourneyRouteImport.update({ id: '/journey', path: '/journey', getParentRoute: () => rootRouteImport } as any)
+const JournalRoute = JournalRouteImport.update({ id: '/journal', path: '/journal', getParentRoute: () => rootRouteImport } as any)
+const HabitsRoute = HabitsRouteImport.update({ id: '/habits', path: '/habits', getParentRoute: () => rootRouteImport } as any)
+const HomeRoute = HomeRouteImport.update({ id: '/home', path: '/home', getParentRoute: () => rootRouteImport } as any)
+const ExamsRoute = ExamsRouteImport.update({ id: '/exams', path: '/exams', getParentRoute: () => rootRouteImport } as any)
+const ChatRoute = ChatRouteImport.update({ id: '/chat', path: '/chat', getParentRoute: () => rootRouteImport } as any)
+const BridgeRoute = BridgeRouteImport.update({ id: '/bridge', path: '/bridge', getParentRoute: () => rootRouteImport } as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
+const BridgeDashboardRoute = BridgeDashboardRouteImport.update({ id: '/dashboard', path: '/dashboard', getParentRoute: () => BridgeRoute } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/exams': typeof ExamsRoute
-  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/habits': typeof HabitsRoute
   '/journal': typeof JournalRoute
   '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
@@ -123,8 +63,8 @@ export interface FileRoutesByTo {
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/exams': typeof ExamsRoute
-  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/habits': typeof HabitsRoute
   '/journal': typeof JournalRoute
   '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
@@ -141,8 +81,8 @@ export interface FileRoutesById {
   '/bridge': typeof BridgeRouteWithChildren
   '/chat': typeof ChatRoute
   '/exams': typeof ExamsRoute
-  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/habits': typeof HabitsRoute
   '/journal': typeof JournalRoute
   '/journey': typeof JourneyRoute
   '/login': typeof LoginRoute
@@ -155,56 +95,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/bridge'
-    | '/chat'
-    | '/exams'
-    | '/habits'
-    | '/home'
-    | '/journal'
-    | '/journey'
-    | '/login'
-    | '/mood'
-    | '/neuroboost'
-    | '/onboarding'
-    | '/schools'
-    | '/voice'
-    | '/bridge/dashboard'
+  fullPaths: '/' | '/bridge' | '/chat' | '/exams' | '/home' | '/habits' | '/journal' | '/journey' | '/login' | '/mood' | '/neuroboost' | '/onboarding' | '/schools' | '/voice' | '/bridge/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/bridge'
-    | '/chat'
-    | '/exams'
-    | '/habits'
-    | '/home'
-    | '/journal'
-    | '/journey'
-    | '/login'
-    | '/mood'
-    | '/neuroboost'
-    | '/onboarding'
-    | '/schools'
-    | '/voice'
-    | '/bridge/dashboard'
-  id:
-    | '__root__'
-    | '/'
-    | '/bridge'
-    | '/chat'
-    | '/exams'
-    | '/habits'
-    | '/home'
-    | '/journal'
-    | '/journey'
-    | '/login'
-    | '/mood'
-    | '/neuroboost'
-    | '/onboarding'
-    | '/schools'
-    | '/voice'
-    | '/bridge/dashboard'
+  to: '/' | '/bridge' | '/chat' | '/exams' | '/home' | '/habits' | '/journal' | '/journey' | '/login' | '/mood' | '/neuroboost' | '/onboarding' | '/schools' | '/voice' | '/bridge/dashboard'
+  id: '__root__' | '/' | '/bridge' | '/chat' | '/exams' | '/home' | '/habits' | '/journal' | '/journey' | '/login' | '/mood' | '/neuroboost' | '/onboarding' | '/schools' | '/voice' | '/bridge/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -212,8 +106,8 @@ export interface RootRouteChildren {
   BridgeRoute: typeof BridgeRouteWithChildren
   ChatRoute: typeof ChatRoute
   ExamsRoute: typeof ExamsRoute
-  HabitsRoute: typeof HabitsRoute
   HomeRoute: typeof HomeRoute
+  HabitsRoute: typeof HabitsRoute
   JournalRoute: typeof JournalRoute
   JourneyRoute: typeof JourneyRoute
   LoginRoute: typeof LoginRoute
@@ -226,132 +120,35 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/voice': {
-      id: '/voice'
-      path: '/voice'
-      fullPath: '/voice'
-      preLoaderRoute: typeof VoiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schools': {
-      id: '/schools'
-      path: '/schools'
-      fullPath: '/schools'
-      preLoaderRoute: typeof SchoolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/neuroboost': {
-      id: '/neuroboost'
-      path: '/neuroboost'
-      fullPath: '/neuroboost'
-      preLoaderRoute: typeof NeuroboostRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mood': {
-      id: '/mood'
-      path: '/mood'
-      fullPath: '/mood'
-      preLoaderRoute: typeof MoodRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/journey': {
-      id: '/journey'
-      path: '/journey'
-      fullPath: '/journey'
-      preLoaderRoute: typeof JourneyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/journal': {
-      id: '/journal'
-      path: '/journal'
-      fullPath: '/journal'
-      preLoaderRoute: typeof JournalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/habits': {
-      id: '/habits'
-      path: '/habits'
-      fullPath: '/habits'
-      preLoaderRoute: typeof HabitsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/exams': {
-      id: '/exams'
-      path: '/exams'
-      fullPath: '/exams'
-      preLoaderRoute: typeof ExamsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat': {
-      id: '/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bridge': {
-      id: '/bridge'
-      path: '/bridge'
-      fullPath: '/bridge'
-      preLoaderRoute: typeof BridgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bridge/dashboard': {
-      id: '/bridge/dashboard'
-      path: '/dashboard'
-      fullPath: '/bridge/dashboard'
-      preLoaderRoute: typeof BridgeDashboardRouteImport
-      parentRoute: typeof BridgeRoute
-    }
+    '/voice': { id: '/voice'; path: '/voice'; fullPath: '/voice'; preLoaderRoute: typeof VoiceRouteImport; parentRoute: typeof rootRouteImport }
+    '/schools': { id: '/schools'; path: '/schools'; fullPath: '/schools'; preLoaderRoute: typeof SchoolsRouteImport; parentRoute: typeof rootRouteImport }
+    '/onboarding': { id: '/onboarding'; path: '/onboarding'; fullPath: '/onboarding'; preLoaderRoute: typeof OnboardingRouteImport; parentRoute: typeof rootRouteImport }
+    '/neuroboost': { id: '/neuroboost'; path: '/neuroboost'; fullPath: '/neuroboost'; preLoaderRoute: typeof NeuroboostRouteImport; parentRoute: typeof rootRouteImport }
+    '/mood': { id: '/mood'; path: '/mood'; fullPath: '/mood'; preLoaderRoute: typeof MoodRouteImport; parentRoute: typeof rootRouteImport }
+    '/login': { id: '/login'; path: '/login'; fullPath: '/login'; preLoaderRoute: typeof LoginRouteImport; parentRoute: typeof rootRouteImport }
+    '/journey': { id: '/journey'; path: '/journey'; fullPath: '/journey'; preLoaderRoute: typeof JourneyRouteImport; parentRoute: typeof rootRouteImport }
+    '/journal': { id: '/journal'; path: '/journal'; fullPath: '/journal'; preLoaderRoute: typeof JournalRouteImport; parentRoute: typeof rootRouteImport }
+    '/habits': { id: '/habits'; path: '/habits'; fullPath: '/habits'; preLoaderRoute: typeof HabitsRouteImport; parentRoute: typeof rootRouteImport }
+    '/home': { id: '/home'; path: '/home'; fullPath: '/home'; preLoaderRoute: typeof HomeRouteImport; parentRoute: typeof rootRouteImport }
+    '/exams': { id: '/exams'; path: '/exams'; fullPath: '/exams'; preLoaderRoute: typeof ExamsRouteImport; parentRoute: typeof rootRouteImport }
+    '/chat': { id: '/chat'; path: '/chat'; fullPath: '/chat'; preLoaderRoute: typeof ChatRouteImport; parentRoute: typeof rootRouteImport }
+    '/bridge': { id: '/bridge'; path: '/bridge'; fullPath: '/bridge'; preLoaderRoute: typeof BridgeRouteImport; parentRoute: typeof rootRouteImport }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
+    '/bridge/dashboard': { id: '/bridge/dashboard'; path: '/dashboard'; fullPath: '/bridge/dashboard'; preLoaderRoute: typeof BridgeDashboardRouteImport; parentRoute: typeof BridgeRoute }
   }
 }
 
-interface BridgeRouteChildren {
-  BridgeDashboardRoute: typeof BridgeDashboardRoute
-}
-
-const BridgeRouteChildren: BridgeRouteChildren = {
-  BridgeDashboardRoute: BridgeDashboardRoute,
-}
-
-const BridgeRouteWithChildren =
-  BridgeRoute._addFileChildren(BridgeRouteChildren)
+interface BridgeRouteChildren { BridgeDashboardRoute: typeof BridgeDashboardRoute }
+const BridgeRouteChildren: BridgeRouteChildren = { BridgeDashboardRoute: BridgeDashboardRoute }
+const BridgeRouteWithChildren = BridgeRoute._addFileChildren(BridgeRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BridgeRoute: BridgeRouteWithChildren,
   ChatRoute: ChatRoute,
   ExamsRoute: ExamsRoute,
-  HabitsRoute: HabitsRoute,
   HomeRoute: HomeRoute,
+  HabitsRoute: HabitsRoute,
   JournalRoute: JournalRoute,
   JourneyRoute: JourneyRoute,
   LoginRoute: LoginRoute,
@@ -361,6 +158,14 @@ const rootRouteChildren: RootRouteChildren = {
   SchoolsRoute: SchoolsRoute,
   VoiceRoute: VoiceRoute,
 }
-export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
