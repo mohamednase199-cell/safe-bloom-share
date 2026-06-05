@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
-import { ChevronLeft, Headphones, NotebookPen, MessageCircle, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ChevronLeft, Headphones, NotebookPen, MessageCircle, TrendingUp, TrendingDown, Minus, Sparkles } from "lucide-react";
+import { detectPatterns } from "@/lib/bloom-ai.functions";
+import { getHabits, getMemory, getLang } from "@/lib/bloom-helpers";
 
 export const Route = createFileRoute("/mood")({
   head: () => ({ meta: [{ title: "Mood Tracker — Bloom" }, { name: "description", content: "See your emotional weather and gentle weekly insights." }] }),
@@ -35,8 +38,22 @@ function buildWeek(log: Entry[]): (Entry | null)[] {
 }
 
 function Mood() {
+  const findPatterns = useServerFn(detectPatterns);
   const [log, setLog] = useState<Entry[]>([]);
+  const [patterns, setPatterns] = useState<string[]>([]);
+  const [patternsLoading, setPatternsLoading] = useState(false);
   useEffect(() => { setLog(JSON.parse(localStorage.getItem("bloom.moodLog") || "[]")); }, []);
+
+  const runPatterns = async () => {
+    setPatternsLoading(true);
+    try {
+      const res = await findPatterns({ data: { moodLog: log, habits: getHabits(), memory: getMemory(), lang: getLang() } });
+      setPatterns(res.patterns);
+    } catch (e) {
+      console.error(e);
+      setPatterns(["تعذّر التحليل دلوقتي، حاول تاني بعد شوية 💙"]);
+    } finally { setPatternsLoading(false); }
+  };
 
   const week = useMemo(() => buildWeek(log), [log]);
   const present = week.filter(Boolean) as Entry[];
@@ -121,6 +138,25 @@ function Mood() {
             <p className="text-xs font-medium uppercase tracking-wider opacity-70">Your Emotional Insight 💡</p>
             <p className="mt-2 text-base font-medium leading-relaxed">{insight}</p>
             <p className="mt-3 text-[10px] uppercase tracking-wider opacity-60">Bloom doesn't diagnose — it listens.</p>
+          </section>
+
+          <section className="rounded-3xl bg-white p-5 shadow-[var(--shadow-soft)]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold">AI Pattern Detection 🔮</h2>
+              <button onClick={runPatterns} disabled={patternsLoading}
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                style={{ background: "var(--gradient-sage)" }}>
+                <Sparkles size={12} /> {patternsLoading ? "Analyzing…" : "Analyze"}
+              </button>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">Bloom looks across your moods, habits, and memories for gentle patterns.</p>
+            {patterns.length > 0 && (
+              <ul className="mt-3 space-y-2 text-sm">
+                {patterns.map((p, i) => (
+                  <li key={i} className="rounded-2xl p-3" style={{ background: "color-mix(in oklab, var(--bloom-lavender) 45%, white)" }}>· {p}</li>
+                ))}
+              </ul>
+            )}
           </section>
 
           <section className="grid grid-cols-3 gap-3">
